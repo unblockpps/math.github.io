@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unblock PPS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: black; margin: 0; padding: 0; font-family: sans-serif; color: white; }
+        .container { display: flex; height: 100vh; }
+        .categories { width: 250px; padding: 20px; border-right: 2px solid #000033; }
+        .content { flex-grow: 1; padding: 20px; overflow-y: auto; }
+        h2 { margin-top: 0; }
+        p { line-height: 1.6; }
+        .image-box-row { display: flex; gap: 20px; margin-bottom: 20px; }
+        .image-box { flex: 1; background-color: #000033; padding: 10px; text-align: center; }
+        .image-box img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .image-box p { margin-top: 10px; font-size: 0.9em; font-style: italic; }
+        a {
+            color: white;
+        }
+    </style>
+    </style>
+</head>
+<body>
+
+    <div id="protected-content" class="container">
+        <div class="categories">
+            <h2>Categories</h2>
+            <ul>
+                <a href="main.html">Main</a>
+                <li>Exploits</li>
+                <li>Utilities</li>
+                <li>News</li>
+            </ul>
+            <button onclick="logout()" style="margin-top: 20px; background: #444; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px;">Log Out</button>
+        </div>
+<div class="content">
+            <h2>News</h2>
+            <p>Welcome to the beta of Unblock PPS! This is the very first release (atleast to people other than me). I know there isnt that much... but hopefully this is enough for now. Also, please report any bugs to my email, other than that enjoy!</p>
+            </div>
+    </div>
+    <script>
+        const SUPABASE_URL = 'https://eyjznvdwygrmwtwcitah.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5anpudmR3eWdybXd0d2NpdGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NTU4MTYsImV4cCI6MjA4MzMzMTgxNn0.peEYldCsD4bN6eELGZ0i6KUmdGu8BQO3ne6bEZtB9IM';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function checkUser() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            if (!session) {
+                window.location.href = "signin.html"; 
+            } else {
+                document.getElementById('protected-content').style.display = 'flex';
+                console.log("Logged in as:", session.user.email);
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+        }
+
+        checkUser();
+    </script>
+</body>
+</html>

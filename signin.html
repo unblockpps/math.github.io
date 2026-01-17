@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unblock PPS</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000000;
+            margin: 0;
+            color: #ffffff;
+        }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 350px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .login-container h2 {
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-size: 2em;
+        }
+        .login-container input {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            font-size: 1em;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .login-container button:hover { background-color: #0056b3; }
+        #message { margin-top: 15px; font-size: 0.9em; color: #88bbff; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Sign In</h2>
+        <input type="text" id="email" placeholder="Email/Username">
+        <input type="password" id="password" placeholder="Password">
+        <button type="button" onclick="login()">Log In</button>
+        
+        <p id="message"></p>
+    </div>
+
+    <script>
+
+    const SUPABASE_URL = 'https://eyjznvdwygrmwtwcitah.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5anpudmR3eWdybXd0d2NpdGFoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NTU4MTYsImV4cCI6MjA4MzMzMTgxNn0.peEYldCsD4bN6eELGZ0i6KUmdGu8BQO3ne6bEZtB9IM';
+    
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function login() {
+        // 1. SELECT ALL ELEMENTS FIRST
+        const emailEl = document.getElementById('email');
+        const passwordEl = document.getElementById('password');
+        const messageBox = document.getElementById('message');
+
+        // 2. CHECK IF THEY EXIST (Safety Check)
+        if (!emailEl || !passwordEl) {
+            alert("Error: HTML is missing input fields with id='email' or id='password'");
+            return;
+        }
+
+        // 3. START THE LOGIN PROCESS
+        const emailValue = emailEl.value;
+        const passwordValue = passwordEl.value;
+
+        // Use the messageBox only if it exists, otherwise use alert
+        if (messageBox) {
+            messageBox.innerText = "Verifying...";
+            messageBox.style.color = "white";
+        }
+
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: emailValue,
+                password: passwordValue,
+            });
+
+            if (error) {
+                if (messageBox) {
+                    messageBox.innerText = "Error: " + error.message;
+                    messageBox.style.color = "#ff4d4d";
+                } else {
+                    alert("Login Error: " + error.message);
+                }
+            } else {
+                if (messageBox) messageBox.innerText = "Success! Redirecting...";
+                
+                // Move to the protected page
+                setTimeout(() => {
+                    window.location.href = "main.html"; 
+                }, 1000);
+            }
+        } catch (err) {
+            console.error("Critical System Error:", err);
+            alert("An unexpected error occurred. Check the console.");
+        }
+    }
+</script>
+</body>
+</html>
